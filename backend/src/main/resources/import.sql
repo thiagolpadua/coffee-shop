@@ -1,0 +1,11 @@
+INSERT INTO ITEM (ID, NAME, PRICE) 
+VALUES ( nextval('ITEM_ID_SEQUENCE'), 'Espresso', 5.5);
+
+INSERT INTO ITEM (ID, NAME, PRICE) 
+VALUES ( nextval('ITEM_ID_SEQUENCE'), 'Cappuccino', 7.9);
+
+INSERT INTO ITEM (ID, NAME, PRICE) 
+VALUES ( nextval('ITEM_ID_SEQUENCE'), 'Latte', 6.5);
+
+INSERT INTO ITEM (ID, NAME, PRICE) 
+VALUES ( nextval('ITEM_ID_SEQUENCE'), 'Mocha', 7.5);
