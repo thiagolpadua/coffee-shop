@@ -135,7 +135,7 @@ public class ItemEndpoint {
         @APIResponse(responseCode = "500", description = "System error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
         public Response delete(
-                        @Parameter(description = "The customer id to delete.", required = true) @PathParam("id") int id)
+                        @Parameter(description = "The item id to delete.", required = true) @PathParam("id") int id)
                         throws BusinessErrorException {
 
                 LOG.debug("ItemRest + DELETE - id=[" + id + "]");

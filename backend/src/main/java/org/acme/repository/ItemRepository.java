@@ -3,6 +3,7 @@ package org.acme.repository;
 import java.util.List;
 import java.util.Optional;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -10,6 +11,7 @@ import org.acme.exceptions.BusinessError;
 import org.acme.exceptions.BusinessErrorException;
 import org.acme.models.Item;
 
+@RequestScoped
 public class ItemRepository {
 
     @Inject
