@@ -7,23 +7,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "ITEM")
-@NamedNativeQueries({
-    @NamedNativeQuery(
-        name = "Item.findAll",
-        query = "SELECT * " +
-                "FROM  ITEM " ,
-            resultClass = Item.class                
-    ),
-})
+@NamedNativeQuery(
+    name = "Product.findAll",
+    query = "SELECT * " +
+            "FROM  ITEM " ,
+        resultClass = Product.class                
+)
 
-public class Item {
+public class Product {
 
     @Id
     @SequenceGenerator(

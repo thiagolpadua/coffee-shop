@@ -2,18 +2,18 @@ package org.acme.dto;
 
 import java.math.BigDecimal;
 
-import org.acme.models.Item;
+import org.acme.models.Product;
 
-public class ItemDto {
+public class ProductDto {
 
-    public ItemDto() {
+    public ProductDto() {
         
     }
 
-    public ItemDto(Item item) {
-        this.id = item.getId();
-        this.name = item.getName();
-        this.price = item.getPrice();
+    public ProductDto(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.price = product.getPrice();
     }    
 
     private int id;

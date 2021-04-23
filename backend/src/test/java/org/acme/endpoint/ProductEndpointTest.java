@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 
-import org.acme.dto.ItemDto;
+import org.acme.dto.ProductDto;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,61 +14,61 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 
 @QuarkusTest
-public class ItemEndpointTest {
+public class ProductEndpointTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ItemEndpointTest.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ProductEndpointTest.class.getName());
 
     @Test
-    public void createItemSuccess() {
+    public void createProductSuccess() {
         
-        LOG.info("createItemSuccess()");
+        LOG.info("createProductSuccess()");
 
-        ItemDto request = new ItemDto();
+        ProductDto request = new ProductDto();
 
         request.setName("Any coffee");
         request.setPrice(BigDecimal.valueOf(9.9));
 
-        ItemDto response = 
+        ProductDto response = 
             given()
             .contentType(ContentType.JSON)
             .body(request)
             .when()
-            .post("/item")
+            .post("/product")
             .then()
             .statusCode(200)
             .extract()
             .body()
-            .as(ItemDto.class);
+            .as(ProductDto.class);
 
-        assertTrue(response.getId()>0,"Item Id < 0");
+        assertTrue(response.getId()>0,"Product Id < 0");
         
     }
 
     @Test
-    public void listItemSuccess() {
+    public void listProductSuccess() {
         
-        LOG.info("listItemSuccess()");
+        LOG.info("listProductSuccess()");
 
-        ItemDto[] response = 
+        ProductDto[] response = 
             given()
             .when()
-            .get("/item")
+            .get("/product")
             .then()
             .statusCode(200)
             .extract()
             .body()
-            .as(ItemDto[].class);
+            .as(ProductDto[].class);
 
         assertTrue(response.length!=0,"Array is empty");
         
     }
 
     @Test
-    public void updateItemSuccess() {
+    public void updateProductSuccess() {
         
-        LOG.info("updateItemSuccess()");
+        LOG.info("updateProductSuccess()");
 
-        ItemDto request = new ItemDto();
+        ProductDto request = new ProductDto();
 
         request.setId(1);
         request.setName("Any coffee updated");
@@ -78,20 +78,20 @@ public class ItemEndpointTest {
             .contentType(ContentType.JSON)
             .body(request)
             .when()
-            .put("/item")
+            .put("/product")
             .then()
             .statusCode(200);
         
     }
 
     @Test
-    public void deleteItemSuccess() {
+    public void deleteProductSuccess() {
         
-        LOG.info("deleteItemSuccess()");
+        LOG.info("deleteProductSuccess()");
 
         given()
             .when()
-            .get("/item?id=1")
+            .get("/product?id=1")
             .then()
             .statusCode(200);
         

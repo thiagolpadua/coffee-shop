@@ -15,13 +15,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.acme.dto.ItemDto;
+import org.acme.dto.ProductDto;
 import org.acme.exceptions.BusinessError;
 import org.acme.exceptions.BusinessErrorException;
-import org.acme.services.ItemCreateService;
-import org.acme.services.ItemDeleteService;
-import org.acme.services.ItemListService;
-import org.acme.services.ItemUpdateService;
+import org.acme.services.ProductCreateService;
+import org.acme.services.ProductDeleteService;
+import org.acme.services.ProductGetService;
+import org.acme.services.ProductListService;
+import org.acme.services.ProductUpdateService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -31,46 +32,49 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/item")
-@Tag(name = "Item", description = "Item CRUD")
+@Path("/product")
+@Tag(name = "Product", description = "Product CRUD")
 @RequestScoped
-public class ItemEndpoint {
+public class ProductEndpoint {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ItemEndpoint.class.getName());
-
-        @Inject
-        ItemCreateService itemCreateService;
+    private static final Logger LOG = LoggerFactory.getLogger(ProductEndpoint.class.getName());
 
         @Inject
-        ItemListService itemListService;
+        ProductCreateService productCreateService;
 
         @Inject
-        ItemUpdateService itemUpdateService;
+        ProductListService productListService;
 
         @Inject
-        ItemDeleteService itemDeleteService;
+        ProductUpdateService productUpdateService;
+
+        @Inject
+        ProductDeleteService productDeleteService;
+
+        @Inject
+        ProductGetService productGetService;
 
         @POST
         @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
         @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-        @Operation(summary = "Create a Item", description = "Create a Item")
+        @Operation(summary = "Create a Product", description = "Create a Product")
         @APIResponse(responseCode = "200", description = "OK", content = {
-                        @Content(mediaType = "application/json", schema = @Schema(implementation = ItemDto.class)) })
+                        @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)) })
         @APIResponse(responseCode = "422", description = "Business Error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
         @APIResponse(responseCode = "500", description = "System error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
-        public Response create(ItemDto request) throws BusinessErrorException {
+        public Response create(ProductDto request) throws BusinessErrorException {
 
                 Jsonb jsonb = JsonbBuilder.create();
                 String jsonString = jsonb.toJson(request);
 
-                LOG.debug("ItemRest + POST - request - " + jsonString);
+                LOG.debug("ProductRest + POST - request - " + jsonString);
 
-                ItemDto response = itemCreateService.CreateItemService(request);
+                ProductDto response = productCreateService.CreateProductService(request);
 
                 jsonString = jsonb.toJson(response);
-                LOG.debug("ItemRest + POST - response - " + jsonString);
+                LOG.debug("ProductRest + POST - response - " + jsonString);
 
                 return Response.status(Response.Status.OK).entity(response).build();
 
@@ -78,18 +82,18 @@ public class ItemEndpoint {
 
         @GET
         @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-        @Operation(summary = "List Item", description = "List items")
+        @Operation(summary = "List Product", description = "List products")
         @APIResponse(responseCode = "200", description = "OK", content = {
-                        @Content(mediaType = "application/json", schema = @Schema(implementation = ItemDto[].class)) })
+                        @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto[].class)) })
         @APIResponse(responseCode = "422", description = "Business Error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
         @APIResponse(responseCode = "500", description = "System error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
-        public Response list() throws BusinessErrorException {
+        public Response list() {
 
-                LOG.debug("ItemRest + GET");
+                LOG.debug("ProductRest + GET");
 
-                ItemDto[] response = itemListService.listItemService();
+                ProductDto[] response = productListService.listProductService();
 
                 Jsonb jsonb = JsonbBuilder.create();
                 String jsonString = jsonb.toJson(response);
@@ -103,23 +107,23 @@ public class ItemEndpoint {
         @PUT
         @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
         @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-        @Operation(summary = "Update Item", description = "Update a item")
+        @Operation(summary = "Update Product", description = "Update a product")
         @APIResponse(responseCode = "200", description = "Success")
         @APIResponse(responseCode = "422", description = "Business Error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
         @APIResponse(responseCode = "500", description = "System error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
-        public Response update(ItemDto request) throws BusinessErrorException {
+        public Response update(ProductDto request) throws BusinessErrorException {
 
                 Jsonb jsonb = JsonbBuilder.create();
                 String jsonString = jsonb.toJson(request);
 
-                LOG.debug("ItemRest + PUT - request - " + jsonString);
+                LOG.debug("ProductRest + PUT - request - " + jsonString);
 
-                ItemDto response = itemUpdateService.updateItemService(request);
+                ProductDto response = productUpdateService.updateProductService(request);
 
                 jsonString = jsonb.toJson(response);
-                LOG.debug("ItemRest + PUT - response - " + jsonString);
+                LOG.debug("ProductRest + PUT - response - " + jsonString);
 
                 return Response.status(Response.Status.OK).entity(response).build();
 
@@ -128,23 +132,50 @@ public class ItemEndpoint {
         @DELETE
         @Path("{id}")
         @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-        @Operation(summary = "Delete Item", description = "Delete a item")
+        @Operation(summary = "Delete Product", description = "Delete a product")
         @APIResponse(responseCode = "200", description = "Success")
         @APIResponse(responseCode = "422", description = "Business Error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
         @APIResponse(responseCode = "500", description = "System error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
         public Response delete(
-                        @Parameter(description = "The item id to delete.", required = true) @PathParam("id") int id)
+                        @Parameter(description = "The product id to delete.", required = true) @PathParam("id") int id)
                         throws BusinessErrorException {
 
-                LOG.debug("ItemRest + DELETE - id=[" + id + "]");
+                LOG.debug("ProductRest + DELETE - id=[" + id + "]");
 
-                itemDeleteService.deleteItemService(id);
+                productDeleteService.deleteProductService(id);
 
-                LOG.debug("ItemRest + DELETE - end");
+                LOG.debug("ProductRest + DELETE - end");
 
                 return Response.status(Response.Status.OK).build();
+
+        }
+
+        @GET
+        @Path("{id}")
+        @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+        @Operation(summary = "Get Product By Id", description = "Get a product By Id")
+        @APIResponse(responseCode = "200", description = "OK", content = {
+                        @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto[].class)) })
+        @APIResponse(responseCode = "422", description = "Business Error", content = {
+                        @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
+        @APIResponse(responseCode = "500", description = "System error", content = {
+                        @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
+        public Response get(
+                        @Parameter(description = "The product id to get.", required = true) @PathParam("id") int id)
+                        throws BusinessErrorException {
+
+                LOG.debug("ProductRest + GET");
+
+                ProductDto response = productGetService.getProductService(id);
+
+                Jsonb jsonb = JsonbBuilder.create();
+                String jsonString = jsonb.toJson(response);
+
+                LOG.debug("Response + GET - response - " + jsonString);
+
+                return Response.status(Response.Status.OK).entity(response).build();
 
         }
     
