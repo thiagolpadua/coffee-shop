@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 @RequestScoped
 public class ProductEndpoint {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProductEndpoint.class.getName());
+        private static final Logger LOG = LoggerFactory.getLogger(ProductEndpoint.class.getName());
 
         @Inject
         ProductCreateService productCreateService;
@@ -105,6 +105,7 @@ public class ProductEndpoint {
         }
 
         @PUT
+        @Path("{id}")
         @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
         @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
         @Operation(summary = "Update Product", description = "Update a product")
@@ -113,7 +114,9 @@ public class ProductEndpoint {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
         @APIResponse(responseCode = "500", description = "System error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
-        public Response update(ProductDto request) throws BusinessErrorException {
+        public Response update(ProductDto request,
+                        @Parameter(description = "The product id to delete.", required = true) @PathParam("id") int id)
+                        throws BusinessErrorException {
 
                 Jsonb jsonb = JsonbBuilder.create();
                 String jsonString = jsonb.toJson(request);
@@ -162,8 +165,7 @@ public class ProductEndpoint {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
         @APIResponse(responseCode = "500", description = "System error", content = {
                         @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessError.class)) })
-        public Response get(
-                        @Parameter(description = "The product id to get.", required = true) @PathParam("id") int id)
+        public Response get(@Parameter(description = "The product id to get.", required = true) @PathParam("id") int id)
                         throws BusinessErrorException {
 
                 LOG.debug("ProductRest + GET");
@@ -178,5 +180,5 @@ public class ProductEndpoint {
                 return Response.status(Response.Status.OK).entity(response).build();
 
         }
-    
+
 }

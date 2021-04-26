@@ -11,7 +11,7 @@ import { EMPTY, Observable } from 'rxjs';
 })
 export class ProductService {
 
-  baseUrl = 'http://localhost:8080/item';
+  baseUrl = 'http://localhost:8080/product';
 
   constructor(private snackBar: MatSnackBar,
     private htttp: HttpClient) { }
@@ -34,6 +34,30 @@ export class ProductService {
 
   read(): Observable<Product[]> {
     return this.htttp.get<Product[]>(this.baseUrl).pipe(
+      map((obj) => obj),
+      catchError((error) => this.errorHandler(error))
+    );
+  }
+
+  readById(id: number): Observable<Product> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.htttp.get<Product>(url).pipe(
+      map((obj) => obj),
+      catchError((error) => this.errorHandler(error))
+    );
+  }
+
+  update(product: Product): Observable<Product> {
+    const url = `${this.baseUrl}/${product.id}`;
+    return this.htttp.put<Product>(url, product).pipe(
+      map((obj) => obj),
+      catchError((error) => this.errorHandler(error))
+    );
+  }
+
+  delete(id: number): Observable<Product> {
+    const url = `${this.baseUrl}/${id}`;
+    return this.htttp.delete<Product>(url).pipe(
       map((obj) => obj),
       catchError((error) => this.errorHandler(error))
     );
